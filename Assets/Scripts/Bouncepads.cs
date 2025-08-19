@@ -23,8 +23,11 @@ public class Bouncepads : MonoBehaviour
             // Opcional: limpiar velocidad previa
             rb.velocity = Vector3.zero;
 
+            Vector3 bounceDirection = transform.up;
+
             // Impulsar hacia arriba
-            rb.AddForce(Vector3.up * bounceForce, ForceMode.Impulse);
+            rb.AddForce(bounceDirection * bounceForce, ForceMode.Impulse);
+            
         }
     }
 }
