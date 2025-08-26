@@ -1,49 +1,43 @@
 using UnityEngine;
 
-public class FirstPersonCamera : MonoBehaviour 
-{        
+public class FirstPersonCamera : MonoBehaviour
+{
     [SerializeField] GameObject player;
-    [SerializeField][Range(0.5f, 10f)]
-    float mouseSense = 1; 
+    [SerializeField][Range(0.5f, 10f)] 
+    float mouseSense = 1f; 
     [SerializeField][Range(-80, -10)]
-     int lookUp = -15;
+    int lookUp = -15;
     [SerializeField][Range(15, 80)]
     int lookDown = 80;
-    Animator anim;
 
-    private void Start() 
+    float xRotation = 0f; // acumulador para pitch
+
+    void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked; 
+        Cursor.lockState = CursorLockMode.Locked;
     }
+
     void Update()
     {
         float rotateX = Input.GetAxis("Mouse X") * mouseSense;
         float rotateY = Input.GetAxis("Mouse Y") * mouseSense;
 
-        Vector3 rotCamera = transform.rotation.eulerAngles;
-        Vector3 rotPlayer = player.transform.rotation.eulerAngles;
+        // Rotar jugador en eje Y (yaw)
+        player.transform.Rotate(Vector3.up * rotateX);
 
-        rotCamera.x = (rotCamera.x > 180) ? rotCamera.x - 360 : rotCamera.x;
-        rotCamera.x = Mathf.Clamp(rotCamera.x, lookUp, lookDown);
-        rotCamera.x -= rotateY;
+        // Acumular rotación vertical
+        xRotation -= rotateY;
+        xRotation = Mathf.Clamp(xRotation, lookUp, lookDown);
 
-        rotCamera.z = 0;
-        rotPlayer.y += rotateX;
+        // Aplicar rotación vertical solo a la cámara
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
-        transform.rotation = Quaternion.Euler(rotCamera);
-        player.transform.rotation = Quaternion.Euler(rotPlayer);
-
+        // Toggle cursor
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (Cursor.lockState == CursorLockMode.Locked)
-            {
-                Cursor.lockState = CursorLockMode.None;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
+            Cursor.lockState = (Cursor.lockState == CursorLockMode.Locked) 
+                ? CursorLockMode.None 
+                : CursorLockMode.Locked;
         }
     }
 }
- 

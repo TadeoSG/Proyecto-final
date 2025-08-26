@@ -9,11 +9,11 @@ public class PlayerController : MonoBehaviour
     Rigidbody rb;
     Vector3 direction;
     [SerializeField] float jumpForce = 10f;
-    bool isGrounded = true;
-    bool Dash = true;
+    public bool isGrounded = true;
+    public bool Dash = true;
     public Transform cameraTransform;
     [SerializeField] float dashForce = 10f;
-    bool OnAirTime = false;
+
   
     void Start()
     {
@@ -55,7 +55,6 @@ public class PlayerController : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         isGrounded = true;
-        OnAirTime = false;
         Dash = true;
     }
 }
