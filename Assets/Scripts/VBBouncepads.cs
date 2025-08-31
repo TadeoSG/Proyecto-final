@@ -39,7 +39,9 @@ public class VBBouncepads : MonoBehaviour
             rb.velocity = Vector3.zero;
 
             Vector3 bounceDirection = transform.up;
-            rb.AddForce(bounceDirection * highestPoint, ForceMode.Impulse);
+            
+            float bounceStrength = Mathf.Abs(highestPoint - transform.position.y);
+            rb.AddForce(bounceDirection * bounceStrength, ForceMode.Impulse);
 
             playerController.isGrounded = false;
         }

@@ -1036,7 +1036,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1906359608}
-  BaseBounceForce: 10
 --- !u!65 &1623963581
 BoxCollider:
   m_ObjectHideFlags: 0
