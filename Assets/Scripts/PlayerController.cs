@@ -37,13 +37,18 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && Dash == true && isGrounded == false)
         {
-           
+
             Vector3 dashDirection = cameraTransform.forward.normalized;
 
             rb.velocity = Vector3.zero;
             rb.AddForce(dashDirection * dashForce, ForceMode.Impulse);
             Dash = false;
 
+        }
+
+        if (rb.velocity.y < -0.1f)
+        {
+            isGrounded = false;
         }
     }
 
