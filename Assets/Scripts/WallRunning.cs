@@ -26,6 +26,7 @@ public class WallRunning : MonoBehaviour
 
     [Header("References")]
     public Transform orientation;
+    
    
     private Rigidbody rb;
     // Start is called before the first frame update

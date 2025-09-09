@@ -13,8 +13,10 @@ public class PlayerController : MonoBehaviour
     public bool Dash = true;
     public Transform cameraTransform;
     [SerializeField] float dashForce = 10f;
+    [SerializeField] float groundCheckRadius = 0.3f;
+    [SerializeField] LayerMask groundMask;
 
-  
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -24,6 +26,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckGround();
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
         direction = new Vector3(moveHorizontal, 0.0f, moveVertical);
@@ -52,17 +55,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-     void FixedUpdate()
+    void FixedUpdate()
     {
         rb.MovePosition(transform.position + direction * currentSpeed * Time.deltaTime);
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.CompareTag("Floor"))
         {
             isGrounded = true;
             Dash = true;
         }
+    }
+    
+    private void CheckGround()
+    {
+        isGrounded = Physics.CheckSphere(transform.position + Vector3.down * 1f, groundCheckRadius, groundMask);
+        if (isGrounded) Dash = true;
     }
 }
