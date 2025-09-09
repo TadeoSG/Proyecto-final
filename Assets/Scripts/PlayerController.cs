@@ -59,7 +59,10 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        isGrounded = true;
-        Dash = true;
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            isGrounded = true;
+            Dash = true;
+        }
     }
 }
