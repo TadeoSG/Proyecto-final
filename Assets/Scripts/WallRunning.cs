@@ -9,7 +9,9 @@ public class WallRunning : MonoBehaviour
     public LayerMask ground;
     public float wallRunForce;
     public float maxWallRunTime;
-    
+
+    [Header("Jumping")]
+    [SerializeField] private float wallJumpForce = 8f;
 
     [Header("Input")]
     private float horizontalInput;
@@ -24,24 +26,29 @@ public class WallRunning : MonoBehaviour
     private bool wallRight;
     private bool isWallRunning;
 
+    [Header("Camera tilting")]
+    [SerializeField] Transform cameraHolder; // arrastra tu Main Camera aquí
+    [SerializeField] float tiltAngle = 45f;
+    [SerializeField] float tiltSpeed = 5f;
+    private float currentTilt = 0f;
+
     [Header("References")]
     public Transform orientation;
-    
-   
     private Rigidbody rb;
+
     // Start is called before the first frame update
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        
 
     }
 
     // Update is called once per frame
-   private void Update()
+    private void Update()
     {
         CheckForWall();
         StateMachine();
+        HandleCameraTilt();
 
         if (isWallRunning)
         {
@@ -51,7 +58,7 @@ public class WallRunning : MonoBehaviour
 
     void FixedUpdate()
     {
-    
+
     }
 
     private void CheckForWall()
@@ -83,7 +90,7 @@ public class WallRunning : MonoBehaviour
     private void StartWallRun()
     {
         isWallRunning = true;
-        rb.useGravity = false; 
+        rb.useGravity = false;
     }
 
     private void WallRunningMovement()
@@ -106,10 +113,18 @@ public class WallRunning : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             rb.AddForce(wallForward * wallRunForce, ForceMode.Force);
-        }   
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            Vector3 wallJumpDirection = wallRight ? rightWallHit.normal : leftWallHit.normal;
+
+            // Más peso hacia arriba, menos hacia afuera
+            Vector3 jumpDirection = wallJumpDirection * 0.5f + Vector3.up * 1.5f;
+
+            // No lo normalizamos, porque queremos conservar esa proporción
+            rb.AddForce(jumpDirection * wallJumpForce, ForceMode.Impulse);
+
             StopWallRun();
         }
     }
@@ -119,5 +134,25 @@ public class WallRunning : MonoBehaviour
     {
         isWallRunning = false;
         rb.useGravity = true;
+
+    }
+
+    private void HandleCameraTilt()
+    {
+        float targetTilt = 0f;
+
+        if (isWallRunning)
+        {
+            if (wallRight) targetTilt = tiltAngle;
+            else if (wallLeft) targetTilt = -tiltAngle;
+        }
+
+        currentTilt = Mathf.Lerp(currentTilt, targetTilt, Time.deltaTime * tiltSpeed);
+
+        cameraHolder.localRotation = Quaternion.Euler(
+            cameraHolder.localRotation.eulerAngles.x,
+            cameraHolder.localRotation.eulerAngles.y,
+            currentTilt
+        );
     }
 }
