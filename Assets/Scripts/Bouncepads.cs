@@ -18,7 +18,7 @@ public class Bouncepads : MonoBehaviour
 
     void OnCollisionEnter(Collision col)
     {
-        if (col.gameObject == player)
+        if (col.gameObject.CompareTag("Player"))
         {
             rb.velocity = Vector3.zero;
 
