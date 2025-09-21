@@ -6,12 +6,21 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 63b4a7cbe79cc9244960277f2cc66560
+  - enabled: 1
+    path: Assets/Scenes/Level Manager.unity
+    guid: 7f77843101ace974aaea35d5ff16bf26
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: 5c287fb07ad8c9a49aecfbcec6e381c2
+  - enabled: 1
+    path: Assets/Scenes/Level 2.unity
+    guid: 4f1f515ad6e5d62489f090f0ad2cd5c0
+  - enabled: 1
+    path: Assets/Scenes/Level 3.unity
+    guid: b8ac615480a00f34a8815d66ba850e2d
+  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
-    path: Assets/Kodland_PlayerPrefs/Fox_Scenes/Game.unity
-    guid: c732593fe76e5a84197f9cd13963f706
-  - enabled: 1
-    path: Assets/Kodland_PlayerPrefs/Fox_Scenes/Menu.unity
-    guid: 8823d5fb7864cb045a1d63447455b60f
   m_configObjects: {}

@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float dashForce = 10f;
     [SerializeField] float groundCheckRadius = 0.3f;
     [SerializeField] LayerMask groundMask;
+    public AudioSource dashSound; // drag your AudioSource here in Inspector
+
 
 
     void Start()
@@ -38,16 +40,21 @@ public class PlayerController : MonoBehaviour
             isGrounded = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && Dash == true && isGrounded == false)
+       if (Input.GetKeyDown(KeyCode.LeftShift) && Dash == true && isGrounded == false)
         {
-
             Vector3 dashDirection = cameraTransform.forward.normalized;
 
             rb.velocity = Vector3.zero;
             rb.AddForce(dashDirection * dashForce, ForceMode.Impulse);
             Dash = false;
 
+            // Play dash sound
+            if (dashSound != null)
+            {
+                dashSound.Play();
+            }
         }
+
 
         if (rb.velocity.y < -0.1f)
         {

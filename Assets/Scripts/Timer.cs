@@ -1,13 +1,13 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class Timer : MonoBehaviour
 {
     public bool running = false;
 
-    private float elapsedTime = 0f; // store total time in seconds
+    private float elapsedTime = 0f;
     public TextMeshProUGUI timerText;
 
     private WinPlatform winPlatform;
@@ -16,15 +16,26 @@ public class Timer : MonoBehaviour
     public string Runtime;
     public string BestRuntime;
 
-
     void Start()
     {
-        timerText.text = "00:00.000"; // Initial text
+        timerText.text = "00:00.000"; 
         winPlatform = FindObjectOfType<WinPlatform>();
+
+        // Cargar mejor tiempo de la escena actual
+        string currentLevel = SceneManager.GetActiveScene().name;
+        string key = "BestTime_" + currentLevel;
+
+        float bestTime = PlayerPrefs.GetFloat(key, float.MaxValue);
+        if (bestTime < float.MaxValue)
+            BestRuntime = FormatTime(bestTime);
+        else
+            BestRuntime = "99:59.999";
     }
+
     void Update()
     {
-        if (winPlatform.hasWon == false && (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D)))
+        if (!winPlatform.hasWon && (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) 
+            || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D)))
         {
             running = true;
         }
@@ -34,14 +45,23 @@ public class Timer : MonoBehaviour
             Tick();
         }
 
-        if (winPlatform.hasWon == true)
+        if (winPlatform.hasWon)
         {
             Runtime = timerText.text;
-            BestRuntime = PlayerPrefs.GetString("BestTime", "99:99.999");
-            if (Runtime.CompareTo(BestRuntime) < 0)
+
+            string currentLevel = SceneManager.GetActiveScene().name;
+            string key = "BestTime_" + currentLevel;
+
+            float bestTime = PlayerPrefs.GetFloat(key, float.MaxValue);
+
+            // si es mejor tiempo, lo guardamos
+            if (elapsedTime < bestTime)
             {
-                PlayerPrefs.SetString("BestTime", Runtime);
+                PlayerPrefs.SetFloat(key, elapsedTime);
+                PlayerPrefs.Save();
+                BestRuntime = FormatTime(elapsedTime);
             }
+
             running = false;
         }
     }
@@ -50,12 +70,15 @@ public class Timer : MonoBehaviour
     {
         elapsedTime += Time.deltaTime;
 
-        // Break it down into minutes, seconds, and milliseconds
-        int minutes = Mathf.FloorToInt(elapsedTime / 60f);
-        int seconds = Mathf.FloorToInt(elapsedTime % 60f);
-        int milliseconds = Mathf.FloorToInt((elapsedTime * 1000f) % 1000f);
+        timerText.text = FormatTime(elapsedTime);
+    }
 
-        // Update the text → 00:00.000 format
-        timerText.text = string.Format("{0:00}:{1:00}.{2:000}", minutes, seconds, milliseconds);
+    string FormatTime(float time)
+    {
+        int minutes = Mathf.FloorToInt(time / 60f);
+        int seconds = Mathf.FloorToInt(time % 60f);
+        int milliseconds = Mathf.FloorToInt((time * 1000f) % 1000f);
+
+        return string.Format("{0:00}:{1:00}.{2:000}", minutes, seconds, milliseconds);
     }
 }

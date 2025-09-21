@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FirstPersonCamera : MonoBehaviour
+public class FirstPerson : MonoBehaviour
 {
     [SerializeField] GameObject player;
     [SerializeField][Range(0.5f, 10f)] 

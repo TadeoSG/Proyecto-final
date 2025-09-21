@@ -7,6 +7,7 @@ public class Bouncepads : MonoBehaviour
     PlayerController playerController;
     [SerializeField] GameObject player;
     [SerializeField] float bounceForce = 10f;
+    public AudioSource BoingSound; // drag your AudioSource here in Inspector
 
     Rigidbody rb;
 
@@ -24,6 +25,11 @@ public class Bouncepads : MonoBehaviour
 
             Vector3 bounceDirection = transform.up;
             rb.AddForce(bounceDirection * bounceForce, ForceMode.Impulse);
+
+            if (BoingSound != null)
+            {
+                BoingSound.Play();
+            }
 
             // Ahora sí funciona
             playerController.isGrounded = false;
